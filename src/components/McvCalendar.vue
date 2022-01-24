@@ -1,39 +1,54 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet height="54" class="d-flex">
-        <v-btn class="ma-2" icon>
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
+      <v-sheet height="65" class="d-flex">
+        <v-toolbar flat>
+          <v-btn class="ma-2" dark color="primary" @click="setTodayDate"
+            >Today</v-btn
+          >
+          <v-btn class="ma-2" icon @click="previousMonth"
+            ><v-icon>mdi-chevron-left</v-icon></v-btn
+          >
+          <v-toolbar-title v-if="$refs.calendar">
+            {{ $refs.calendar.title }}
+          </v-toolbar-title>
 
-        <v-select
-          dense
-          outlined
-          hide-details
-          class="ma-2"
-          :items="types"
-          v-model="type"
-          label="type"
-        >
-        </v-select>
+          <v-btn icon class="ma-2" @click="nextMonth"
+            ><v-icon>mdi-chevron-right</v-icon></v-btn
+          >
+          <v-spacer></v-spacer>
+          <v-select
+            background-color="blue lighten-5"
+            dense
+            outlined
+            hide-details
+            class="ma-2"
+            :items="types"
+            v-model="type"
+            label="type"
+            style="max-width: 150px"
+          >
+          </v-select>
 
-        <v-select
-          dense
-          outlined
-          hide-details
-          class="ma-2"
-          :items="weekdays"
-          v-model="weekday"
-          label="week-days"
-        >
-        </v-select>
-        <v-btn icon class="ma-2"><v-icon>mdi-chevron-right</v-icon></v-btn>
+          <v-select
+            background-color="blue lighten-5"
+            dense
+            outlined
+            hide-details
+            class="ma-2"
+            :items="weekdays"
+            v-model="weekday"
+            label="week-days"
+            style="max-width: 150px"
+          >
+          </v-select>
+        </v-toolbar>
       </v-sheet>
 
       <v-sheet height="600">
         <v-calendar
+          ref="calendar"
           color="primary"
-          :now="today"
           :type="type"
           v-model="focus"
           :weekdays="weekday"
@@ -54,6 +69,23 @@ export default {
   data: () => ({
     type: "month",
     types: ["month", "week", "day"],
+    currentDate: new Date(),
+    month: new Date().getMonth(),
+    year: new Date().getFullYear(),
+    months: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
     weekday: [0, 1, 2, 3, 4, 5, 6],
     weekdays: [
       { text: "Sun - Sat", value: [0, 1, 2, 3, 4, 5, 6] },
@@ -75,19 +107,45 @@ export default {
 
   computed: {
     today() {
-      return new Date().toISOString().substring(0, 10);
+      return this.currentDate.toISOString().substring(0, 10);
+    },
+    currentMonth() {
+      return this.months[this.month];
     },
   },
 
   mounted() {
-    console.log(this.today);
+    this.$refs.calendar.checkChange();
+    console.log("this.refs", this.$refs.calendar.title);
   },
 
   methods: {
-    viewDay({date, year}) {
+    previousMonth() {
+      if (this.month === 0) {
+        this.month = 11;
+        this.year--;
+      } else this.month--;
+      this.currentDateNumber = "01";
+      this.$refs.calendar.prev();
+    },
+
+    nextMonth() {
+      if (this.month === 11) {
+        this.month = 0;
+        this.year++;
+      } else this.month++;
+      this.currentDateNumber = "01";
+      this.$refs.calendar.next();
+    },
+
+    setTodayDate() {
+      this.focus = "";
+    },
+
+    viewDay({ date, year }) {
       this.focus = date;
-      this.type = "day"
-      console.log(year)
+      this.type = "day";
+      console.log(year);
     },
   },
 };
