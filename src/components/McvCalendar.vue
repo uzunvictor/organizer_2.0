@@ -32,9 +32,10 @@
 
       <v-sheet height="600">
         <v-calendar
+          color="primary"
           :now="today"
           :type="type"
-          v-model="today"
+          v-model="focus"
           :weekdays="weekday"
           :events="events"
           @click:date="viewDay"
@@ -58,7 +59,7 @@ export default {
       { text: "Sun - Sat", value: [0, 1, 2, 3, 4, 5, 6] },
       { text: "Mon - Sun", value: [1, 2, 3, 4, 5, 6, 0] },
     ],
-    value: "",
+    focus: "",
     events: [],
     colors: ["blue", "indigo", "deep-purple", "cyan", "green", "orange"],
     names: [
@@ -74,11 +75,7 @@ export default {
 
   computed: {
     today() {
-      const today = new Date();
-      const day = today.getDate();
-      const month = today.getMonth();
-      const year = today.getFullYear();
-      return `${year}-${month}-${day}`;
+      return new Date().toISOString().substring(0, 10);
     },
   },
 
@@ -87,8 +84,10 @@ export default {
   },
 
   methods: {
-    viewDay() {
-      console.log("day day");
+    viewDay({date, year}) {
+      this.focus = date;
+      this.type = "day"
+      console.log(year)
     },
   },
 };
