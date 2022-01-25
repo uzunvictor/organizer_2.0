@@ -33,7 +33,7 @@
       left
       absolute
       temporary
-      color="blue lighten-3"
+      color="blue lighten-5"
       
     >
       <v-container mt-9>
