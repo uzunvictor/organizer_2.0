@@ -1,8 +1,10 @@
 <template>
   <v-row class="fill-height">
-    <v-col>
+    <mcv-sorted-tasks></mcv-sorted-tasks>
+
+    <v-col cols="8">
       <v-sheet height="65" class="d-flex">
-        <v-toolbar flat>
+        <v-toolbar flat color="blue lighten-5" class="rounded-lg">
           <v-btn class="ma-2" dark color="primary" @click="setTodayDate"
             >Today</v-btn
           >
@@ -16,6 +18,7 @@
           <v-btn icon class="ma-2" @click="$refs.calendar.next()"
             ><v-icon>mdi-chevron-right</v-icon></v-btn
           >
+
           <v-spacer></v-spacer>
           <v-select
             background-color="blue lighten-5"
@@ -42,17 +45,19 @@
             style="max-width: 150px"
           >
           </v-select>
+          <v-spacer></v-spacer>
+          <mcv-new-task></mcv-new-task>
         </v-toolbar>
       </v-sheet>
 
-      <v-sheet height="600">
+      <v-sheet height="600" class="rounded=xl">
         <v-calendar
           ref="calendar"
           color="primary"
           :type="type"
           v-model="focus"
           :weekdays="weekday"
-          :events="events"
+          :events="testEvents"
           @click:date="viewDay"
         >
         </v-calendar>
@@ -63,7 +68,13 @@
  
  
 <script>
+import { mapState } from "vuex";
+import McvNewTask from "./McvNewTask.vue";
+import McvSortedTasks from "./McvSortedTasks.vue";
+//import { getItem } from "@/helpers/storage";
+
 export default {
+  components: { McvNewTask, McvSortedTasks },
   name: "McvCalendar",
 
   data: () => ({
@@ -75,16 +86,29 @@ export default {
       { text: "Mon - Sun", value: [1, 2, 3, 4, 5, 6, 0] },
     ],
     focus: "",
-    events: [],
+    dateTitle: "",
+    testEvents: [],
   }),
 
   mounted() {
-    this.events = [];
+    this.testEvents = this.events;
   },
 
+  watch: {
+    events() {
+      this.testEvents = this.events;
+    },
+  },
+
+  computed: {
+    ...mapState({
+      events: (state) => state.eventsModule.events,
+    }),
+  },
   methods: {
     setTodayDate() {
       this.focus = "";
+      this.type = "month";
     },
 
     viewDay({ date }) {
