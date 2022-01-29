@@ -1,9 +1,8 @@
 <template>
-  <v-row class="fill-height">
+  <v-row class="fill-height my-0 py-0">
     <mcv-sorted-tasks></mcv-sorted-tasks>
-    <v-container>
+
     <mcv-calendar></mcv-calendar>
-    </v-container>
   </v-row>
 </template>
 

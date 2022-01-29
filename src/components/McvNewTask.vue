@@ -22,7 +22,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-form ref="formRef">
+            <v-form ref="formRef" @submit.prevent>
               <v-row>
                 <v-col cols="12">
                   <v-text-field
@@ -44,44 +44,91 @@
                 </v-col>
 
                 <v-col cols="12">
-                  <v-menu>
-                    <template v-slot:activator="{ on, attrs }">
+                  <v-row>
+                    <v-col cols="4">
                       <v-text-field
                         v-model="formatedStartDate"
-                        v-bind="attrs"
-                        v-on="on"
-                        label="chose start date"
+                        label="selcted start time"
                       ></v-text-field>
-                    </template>
-                    <v-date-picker v-model="startDate.date"></v-date-picker>
-                    <v-time-picker
-                      v-model="startDate.hour"
-                      format="24hr"
-                    ></v-time-picker>
-                  </v-menu>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-menu>
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            label="select start date"
+                            v-model="startDate"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="startDate"></v-date-picker
+                      ></v-menu>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-menu
+                        :close-on-content-click="false"
+                        ref="startHourRef"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            label="select start hour"
+                            v-model="startHour"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                          @click:minute="$refs.startHourRef.save(startHour)"
+                          v-model="startHour"
+                          format="24hr"
+                        ></v-time-picker> </v-menu
+                    ></v-col>
+                  </v-row>
                 </v-col>
+
                 <v-col cols="12">
-                  <v-menu>
-                    <template v-slot:activator="{ on, attrs }">
+                  <v-row>
+                    <v-col cols="4">
                       <v-text-field
                         v-model="formatedEndDate"
-                        v-bind="attrs"
-                        v-on="on"
-                        label="chose end date"
+                        label="selcted end time"
                       ></v-text-field>
-                    </template>
-                    <v-date-picker v-model="endDate.date"></v-date-picker>
-                  </v-menu>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-menu>
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            label="select end date"
+                            v-model="endDate"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="endDate"></v-date-picker
+                      ></v-menu>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-menu :close-on-content-click="false" ref="endHourRef">
+                        <template v-slot:activator="{ on }">
+                          <v-text-field
+                            label="select end hour"
+                            v-model="endHour"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                          @click:minute="$refs.endHourRef.save(endHour)"
+                          v-model="endHour"
+                          format="24hr"
+                        ></v-time-picker> </v-menu
+                    ></v-col>
+                  </v-row>
                 </v-col>
 
                 <v-col cols="12">
                   <v-menu>
-                    <template v-slot:activator="{ on, attrs }">
+                    <template v-slot:activator="{ on }">
                       <v-text-field
                         label="color"
                         v-model="color"
                         :rules="inputRules"
-                        v-bind="attrs"
                         v-on="on"
                         required
                       ></v-text-field>
@@ -120,12 +167,14 @@ export default {
     isDialog: false,
     name: "",
     details: "",
-    startDate: {
-      date: new Date().toISOString().substring(0, 10),
-      hour: "00:00",
-    },
-    endDate: { date: new Date().toISOString().substring(0, 10), hour: "00:30" },
-    color: "",
+
+    startDate: new Date().toISOString().substring(0, 10),
+    startHour: "00:00",
+
+    endDate: new Date().toISOString().substring(0, 10),
+    endHour: "00:30",
+
+    color: "#FF0000FF",
     picker: "",
     inputRules: [
       (v) => v.length >= 3 || "Minimum number of characters required is 3",
@@ -141,19 +190,25 @@ export default {
 
   computed: {
     formatedStartDate() {
-      return this.startDate.date + " " + String(this.startDate.hour);
+      return this.startDate + " " + String(this.startHour);
     },
 
     formatedEndDate() {
-      return this.endDate.date + " " + String(this.endDate.hour);
+      return this.endDate + " " + String(this.endHour);
+    },
+  },
+
+  watch: {
+    startDate() {
+      this.endDate = this.startDate;
     },
   },
 
   methods: {
     focusNameInput() {
       setTimeout(() => {
-        this.$refs.nameInput.focus()
-      })
+        this.$refs.nameInput.focus();
+      });
     },
 
     saveTask() {
@@ -164,6 +219,7 @@ export default {
           start: this.formatedStartDate,
           end: this.formatedEndDate,
           color: this.color,
+          favorited: true,
         };
 
         this.$store.dispatch("setEventsAction", credentials);

@@ -1,68 +1,67 @@
-<template>   
-
-    <v-col cols="9">
-      <v-sheet height="65" class="d-flex rounded-t-lg">
-        <v-toolbar flat color="blue lighten-5" class="rounded-t-lg">
-          <v-btn class="ma-2" dark color="indigo" @click="goHome">Home</v-btn>
-          <v-btn class="ma-2" dark color="blue darken-2" @click="setTodayDate"
-            >Today</v-btn
-          >
-          <v-btn class="ma-2" icon @click="$refs.calendar.prev()"
-            ><v-icon>mdi-chevron-left</v-icon></v-btn
-          >
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
-          </v-toolbar-title>
-
-          <v-btn icon class="ma-2" @click="$refs.calendar.next()"
-            ><v-icon>mdi-chevron-right</v-icon></v-btn
-          >
-
-          <v-spacer></v-spacer>
-          <v-select
-            background-color="blue lighten-5"
-            dense
-            outlined
-            hide-details
-            class="ma-2"
-            :items="types"
-            v-model="type"
-            label="type"
-            style="max-width: 150px"
-          >
-          </v-select>
-
-          <v-select
-            background-color="blue lighten-5"
-            dense
-            outlined
-            hide-details
-            class="ma-2"
-            :items="weekdays"
-            v-model="weekday"
-            label="week-days"
-            style="max-width: 150px"
-          >
-          </v-select>
-          <v-spacer></v-spacer>
-          <mcv-new-task></mcv-new-task>
-        </v-toolbar>
-      </v-sheet>
-
-      <v-sheet height="600" class="rounded=xl">
-        <v-calendar
-          ref="calendar"
-          color="primary"
-          :type="type"
-          v-model="focus"
-          :weekdays="weekday"
-          :events="testEvents"
-          @click:date="viewDay"
+<template>
+  <v-col cols="9" class="pa-10 fill-height">
+    <v-sheet height="65" class="d-flex rounded-t-lg">
+      <v-toolbar flat color="blue lighten-5" class="rounded-t-lg">
+        <v-btn class="ma-2" dark color="indigo" @click="goHome">Home</v-btn>
+        <v-btn class="ma-2" dark color="blue darken-2" @click="setTodayDate"
+          >Today</v-btn
         >
-        </v-calendar>
-      </v-sheet>
-    </v-col>
+        <v-btn class="ma-2" icon @click="$refs.calendar.prev()"
+          ><v-icon>mdi-chevron-left</v-icon></v-btn
+        >
+        <v-toolbar-title v-if="$refs.calendar">
+          {{ $refs.calendar.title }}
+        </v-toolbar-title>
 
+        <v-btn icon class="ma-2" @click="$refs.calendar.next()"
+          ><v-icon>mdi-chevron-right</v-icon></v-btn
+        >
+
+        <v-spacer></v-spacer>
+        <v-select
+          background-color="blue lighten-5"
+          dense
+          outlined
+          hide-details
+          class="ma-2"
+          :items="types"
+          v-model="type"
+          label="type"
+          style="max-width: 150px"
+        >
+        </v-select>
+
+        <v-select
+          background-color="blue lighten-5"
+          dense
+          outlined
+          hide-details
+          class="ma-2"
+          :items="weekdays"
+          v-model="weekday"
+          label="week-days"
+          style="max-width: 150px"
+        >
+        </v-select>
+        <v-spacer></v-spacer>
+        <mcv-new-task></mcv-new-task>
+      </v-toolbar>
+    </v-sheet>
+
+    <v-sheet class="rounded=xl" height="90%">
+      <v-calendar
+        ref="calendar"
+        color="primary"
+        :type="type"
+        v-model="focus"
+        :weekdays="weekday"
+        :events="testEvents"
+        @click:date="viewDay"
+        @click:event="viewDay"
+      >
+      </v-calendar>
+    </v-sheet>
+  </v-col>
 </template>
  
  
@@ -71,7 +70,7 @@ import { mapState } from "vuex";
 import McvNewTask from "./McvNewTask.vue";
 
 export default {
-  components: { McvNewTask},
+  components: { McvNewTask },
   name: "McvCalendar",
 
   data: () => ({

@@ -6,7 +6,9 @@
     <mcv-navbar />
 
     <v-main class="grey lighten-2">
-      <v-container class="px-0 mx-0"><router-view></router-view></v-container>
+      <v-container class="pa-0 ma-0" fill-height fluid
+        ><router-view></router-view
+      ></v-container>
     </v-main>
   </v-app>
 </template>

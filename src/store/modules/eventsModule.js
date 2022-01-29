@@ -1,26 +1,39 @@
-import { setItem, getItem } from "@/helpers/storage"
+import { setItem, getItem, removeItem } from "@/helpers/storage"
 
 const state = {
-    events: getItem("events") === null ? [] : getItem("events")
+    events: getItem("events") === null ? [] : getItem("events"),
+    sortedEvents: getItem("events") === null ? [] : getItem("events"),
 };
 
 const mutations = {
     updateEventsMutation(state, payload) {
         state.events = payload
+    },
+
+    updateSortedEventsMutation(state, payload) {
+        state.sortedEvents = payload
     }
 };
 
 const actions = {
-    setEventsAction(context, credentials) {
-        const newEvents = [...context.state.events, credentials]
-        context.commit("updateEventsMutation", newEvents)
-        setItem("events", context.state.events)
+    setEventsAction({ state, commit }, credentials) {
+        const newEvents = [...state.events, credentials]
+        commit("updateEventsMutation", newEvents)
+        commit("updateSortedEventsMutation", newEvents)
+        setItem("events", state.events)
 
     },
 
-    deleteEventAction({state, commit}, deletedItem) {
+    deleteEventAction({ state, commit }, deletedItem) {
         const newEvents = state.events.filter((event) => event.name !== deletedItem)
         commit("updateEventsMutation", newEvents)
+        commit("updateSortedEventsMutation", newEvents)
+        removeItem(deletedItem)
+    },
+
+    showFavorited({ state, commit }) {
+        const newEvents = state.sortedEvents.filter((event) => event.favorited === true)
+        commit("updateSortedEventsMutation", newEvents)
     }
 };
 
