@@ -149,10 +149,6 @@ export default {
     },
   },
 
-  mounted() {
-    console.log(this.formatedStartDate);
-  },
-
   methods: {
     focusNameInput() {
       setTimeout(() => {
@@ -169,7 +165,6 @@ export default {
           end: this.formatedEndDate,
           color: this.color,
         };
-        console.log(this.$refs.nameInput.$el);
 
         this.$store.dispatch("setEventsAction", credentials);
         this.name = "";

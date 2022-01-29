@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <v-app-bar class="blue" dark flat app>
+    <v-app-bar class="blue" dark flat bottom app>
       <v-col class="font-weight-bold gray--text d-flex">
         <v-app-bar-nav-icon
           @click="drawer = !drawer"

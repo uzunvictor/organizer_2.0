@@ -3,23 +3,22 @@
     id="main"
     :style="{ background: $vuetify.theme.themes.light.background }"
   >
-    <Navbar />
+    <mcv-navbar />
 
-    <v-main class="mx-4 mb-4">
-      <v-container>
-        <router-view></router-view>
-      </v-container>
+    <v-main class="grey lighten-2">
+      <v-container class="px-0 mx-0"><router-view></router-view></v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import Navbar from "./components/Navbar.vue";
+import McvNavbar from "./components/McvNavbar.vue";
+//import Navbar from "./components/Navbar.vue";
 
 export default {
   name: "App",
   components: {
-    Navbar,
+    McvNavbar,
   },
 };
 </script>

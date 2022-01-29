@@ -1,11 +1,10 @@
-<template>
-  <v-row class="fill-height">
-    <mcv-sorted-tasks></mcv-sorted-tasks>
+<template>   
 
-    <v-col cols="8">
-      <v-sheet height="65" class="d-flex">
-        <v-toolbar flat color="blue lighten-5" class="rounded-lg">
-          <v-btn class="ma-2" dark color="primary" @click="setTodayDate"
+    <v-col cols="9">
+      <v-sheet height="65" class="d-flex rounded-t-lg">
+        <v-toolbar flat color="blue lighten-5" class="rounded-t-lg">
+          <v-btn class="ma-2" dark color="indigo" @click="goHome">Home</v-btn>
+          <v-btn class="ma-2" dark color="blue darken-2" @click="setTodayDate"
             >Today</v-btn
           >
           <v-btn class="ma-2" icon @click="$refs.calendar.prev()"
@@ -63,18 +62,16 @@
         </v-calendar>
       </v-sheet>
     </v-col>
-  </v-row>
+
 </template>
  
  
 <script>
 import { mapState } from "vuex";
 import McvNewTask from "./McvNewTask.vue";
-import McvSortedTasks from "./McvSortedTasks.vue";
-//import { getItem } from "@/helpers/storage";
 
 export default {
-  components: { McvNewTask, McvSortedTasks },
+  components: { McvNewTask},
   name: "McvCalendar",
 
   data: () => ({
@@ -107,6 +104,9 @@ export default {
   },
   methods: {
     setTodayDate() {
+      this.focus = "";
+    },
+    goHome() {
       this.focus = "";
       this.type = "month";
     },

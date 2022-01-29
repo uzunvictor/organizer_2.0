@@ -16,6 +16,11 @@ const actions = {
         context.commit("updateEventsMutation", newEvents)
         setItem("events", context.state.events)
 
+    },
+
+    deleteEventAction({state, commit}, deletedItem) {
+        const newEvents = state.events.filter((event) => event.name !== deletedItem)
+        commit("updateEventsMutation", newEvents)
     }
 };
 
