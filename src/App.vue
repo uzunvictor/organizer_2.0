@@ -1,11 +1,8 @@
 <template>
-  <v-app
-    id="main"
-    :style="{ background: $vuetify.theme.themes.light.background }"
-  >
+  <v-app id="main">
     <mcv-navbar />
 
-    <v-main class="grey lighten-2">
+    <v-main class="grey darken-1">
       <v-container class="pa-0 ma-0" fill-height fluid
         ><router-view></router-view
       ></v-container>
@@ -15,7 +12,6 @@
 
 <script>
 import McvNavbar from "./components/McvNavbar.vue";
-//import Navbar from "./components/Navbar.vue";
 
 export default {
   name: "App",

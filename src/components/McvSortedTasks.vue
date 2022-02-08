@@ -44,7 +44,7 @@
               <v-expansion-panel-content>
                 {{ event.details }}
                 <v-row class="d-flex justify-end"
-                  ><mcv-edit-task />
+                  ><mcv-edit-task :eventInfo="event" />
                   <v-btn
                     icon
                     color="red"

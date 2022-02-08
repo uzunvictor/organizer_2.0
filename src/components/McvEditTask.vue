@@ -56,7 +56,7 @@
                   <v-col cols="4">
                     <v-text-field
                       v-model="formatedStartDate"
-                      label="selcted start time"
+                      label="selected start time"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
@@ -127,7 +127,7 @@
                 </v-row>
               </v-col>
 
-              <v-col cols="12">
+              <v-col cols="8">
                 <v-menu>
                   <template v-slot:activator="{ on }">
                     <v-text-field
@@ -144,8 +144,12 @@
                     :swatches="swatches"
                     show-swatches
                   ></v-color-picker>
-                </v-menu>
-              </v-col>
+                </v-menu> </v-col
+              ><v-col cols="4"
+                ><v-btn :color="color" rounded elevation="0"
+                  >Selected color</v-btn
+                ></v-col
+              >
             </v-row>
           </v-form>
         </v-container>
@@ -168,19 +172,14 @@ export default {
   name: "McvEditTask",
 
   data: () => ({
-    isFavorited: false,
+    isFavorited: null,
     isDialog: false,
     name: "",
     details: "",
+    start: "",
+    end: "",
+    color: "",
 
-    startDate: new Date().toISOString().substring(0, 10),
-    startHour: "00:00",
-
-    endDate: new Date().toISOString().substring(0, 10),
-    endHour: "00:30",
-
-    color: "#FF0000FF",
-    picker: "",
     inputRules: [
       (v) => v.length >= 3 || "Minimum number of characters required is 3",
     ],
@@ -192,22 +191,36 @@ export default {
       ["#0000FF", "#0000AA", "#000055"],
     ],
   }),
-
-  computed: {
-    formatedStartDate() {
-      return this.startDate + " " + String(this.startHour);
-    },
-
-    formatedEndDate() {
-      return this.endDate + " " + String(this.endHour);
+  props: {
+    eventInfo: {
+      type: Object,
+      required: true,
     },
   },
 
-  watch: {
-    startDate() {
-      this.endDate = this.startDate;
-    },
+  mounted() {
+    this.name = this.eventInfo.name;
+    this.details = this.eventInfo.details;
+    this.start = this.eventInfo.start;
+    this.end = this.eventInfo.end;
+    this.color = this.eventInfo.color;
+    this.isFavorited = this.eventInfo.favorited;
   },
+  // computed: {
+  //   formatedStartDate() {
+  //     return this.startDate + " " + String(this.startHour);
+  //   },
+
+  //   formatedEndDate() {
+  //     return this.endDate + " " + String(this.endHour);
+  //   },
+  // },
+
+  // watch: {
+  //   startDate() {
+  //     this.endDate = this.startDate;
+  //   },
+  // },
 
   methods: {
     focusNameInput() {

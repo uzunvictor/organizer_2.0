@@ -48,7 +48,7 @@ export default {
         },
         {
           icon: "mdi-sort-calendar-ascending",
-          tooltip: "sort tasks by date: ascending mode",
+          tooltip: "show latest tasks",
           action: this.showLastEvents,
         },
       ],

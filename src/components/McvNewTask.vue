@@ -1,11 +1,10 @@
 <template>
   <v-row justify="end">
     <v-dialog v-model="isDialog" persistent max-width="600px">
-      <template v-slot:activator="{ on, attrs }">
+      <template v-slot:activator="{ on }">
         <v-btn
           outlined
           x-large
-          v-bind="attrs"
           v-on="on"
           color="blue"
           class="ma-2 white--text"
@@ -22,7 +21,7 @@
             <v-col cols="6"> <span class="text-h6">New Task</span></v-col>
             <v-col cols="6" class="d-flex justify-end"
               ><v-icon
-                @click.stop="isFavorited = true"
+                @click.stop="isFavorited = !isFavorited"
                 :color="isFavorited ? 'red' : 'grey'"
                 x-large
                 >mdi-heart</v-icon
@@ -133,7 +132,7 @@
                   </v-row>
                 </v-col>
 
-                <v-col cols="12">
+                <v-col cols="8">
                   <v-menu>
                     <template v-slot:activator="{ on }">
                       <v-text-field
@@ -150,8 +149,10 @@
                       :swatches="swatches"
                       show-swatches
                     ></v-color-picker>
-                  </v-menu>
-                </v-col>
+                  </v-menu> </v-col
+                ><v-col cols="4"
+                  ><v-btn :color="color" rounded elevation="0">Selected color</v-btn></v-col
+                >
               </v-row>
             </v-form>
           </v-container>
