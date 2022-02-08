@@ -20,17 +20,23 @@
 
       <v-container>
         <v-row>
-          <v-expansion-panels class="ma-2">
+          <v-expansion-panels inset class="ma-2">
             <v-expansion-panel
               v-for="(event, i) in sortedEvents"
               :key="i"
               class="ma-1 rounded-lg"
+              multiple
             >
               <v-hover v-slot="{ hover }">
                 <v-expansion-panel-header
-                  :color="hover ? 'white' : event.color"
                   :class="{ 'on-hover': hover }"
+                  :style="{ 'border-top': `10px solid ${event.color}` }"
                   class="rounded-lg"
+                  ><v-icon
+                    class="d-flex justify-start"
+                    style="max-width: 30px"
+                    :color="event.favorited ? 'red' : 'grey'"
+                    >mdi-heart</v-icon
                   >{{ event.name }}</v-expansion-panel-header
                 ></v-hover
               >
@@ -38,13 +44,15 @@
               <v-expansion-panel-content>
                 {{ event.details }}
                 <v-row class="d-flex justify-end"
-                  ><v-btn
+                  ><mcv-edit-task />
+                  <v-btn
+                    icon
                     color="red"
                     dark
                     outlined
                     class="ma-4 mb-1 rounded-lg"
                     @click="deleteTask(event.name)"
-                    >delete task</v-btn
+                    ><v-icon>mdi-delete</v-icon></v-btn
                   ></v-row
                 >
               </v-expansion-panel-content>
@@ -59,8 +67,10 @@
 
 <script>
 import { mapState } from "vuex";
+import McvEditTask from "./McvEditTask.vue";
 
 export default {
+  components: { McvEditTask },
   name: "McvSortedTasks",
   data: () => ({
     sortedListIcons: [0, 1, 2, 3],
@@ -85,18 +95,25 @@ export default {
     deleteTask(task) {
       this.$store.dispatch("deleteEventAction", task);
     },
+    editTask() {
+      alert("edit task");
+    },
   },
 };
 </script>
 
 
 <style scoped>
-.v-expansion-panel-header {
+/* .v-expansion-panel-header {
   transition: opacity 0.4s ease-in-out;
 }
 
 .v-expansion-panel-header:not(.on-hover) {
   opacity: 0.6;
-}
+} */
+
+/* .v-expansion-panel::before {
+  box-shadow: none !important;
+} */
 </style>
 

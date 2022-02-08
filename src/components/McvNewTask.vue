@@ -17,9 +17,20 @@
       </template>
 
       <v-card>
-        <v-card-title>
-          <span class="text-h6">New Task</span>
-        </v-card-title>
+        <v-container>
+          <v-row>
+            <v-col cols="6"> <span class="text-h6">New Task</span></v-col>
+            <v-col cols="6" class="d-flex justify-end"
+              ><v-icon
+                @click.stop="isFavorited = true"
+                :color="isFavorited ? 'red' : 'grey'"
+                x-large
+                >mdi-heart</v-icon
+              >
+            </v-col>
+          </v-row>
+        </v-container>
+
         <v-card-text>
           <v-container>
             <v-form ref="formRef" @submit.prevent>
@@ -164,6 +175,7 @@ export default {
   name: "McvNewTask",
 
   data: () => ({
+    isFavorited: false,
     isDialog: false,
     name: "",
     details: "",
@@ -219,7 +231,7 @@ export default {
           start: this.formatedStartDate,
           end: this.formatedEndDate,
           color: this.color,
-          favorited: true,
+          favorited: this.isFavorited,
         };
 
         this.$store.dispatch("setEventsAction", credentials);

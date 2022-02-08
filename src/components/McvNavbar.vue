@@ -10,7 +10,6 @@
                 class="mx-0 py-10"
                 v-on="on"
                 :class="{ 'on-hover': hover }"
-                :style="{ backgroud: hover ? 'red' : 'green' }"
                 @click="icon.action"
                 ><v-icon large>{{ icon.icon }}</v-icon></v-btn
               ></v-hover
@@ -50,7 +49,7 @@ export default {
         {
           icon: "mdi-sort-calendar-ascending",
           tooltip: "sort tasks by date: ascending mode",
-          action: this.sortEventsAscending,
+          action: this.showLastEvents,
         },
       ],
 
@@ -66,8 +65,8 @@ export default {
       // alert("favorited");
       this.$store.dispatch("showFavorited");
     },
-    sortEventsAscending() {
-      alert("ascending");
+    showLastEvents() {
+      this.$store.dispatch("showLastEvents");
     },
   },
 };
@@ -76,14 +75,5 @@ export default {
 <style scoped>
 .v-list-item {
   flex: 0;
-}
-
-/* .v-btn:hover {
-  background-color: red;
-} */
-
-.v-btn {
-  color: red;
-  padding: 12px;
 }
 </style>
