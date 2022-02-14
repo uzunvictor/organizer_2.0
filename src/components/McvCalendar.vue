@@ -57,9 +57,45 @@
         :weekdays="weekday"
         :events="testEvents"
         @click:date="viewDay"
-        @click:event="viewDay"
+        @click:event="showEvent"
       >
       </v-calendar>
+      <v-menu
+        v-model="isEdit"
+        :close-on-content-click="false"
+        :activator="selectedElement"
+        offset-x
+      >
+        <v-card
+          :style="`border-top: 10px solid ${selectedEvent.color};`"
+          min-width="350px"
+          flat
+        >
+          <v-toolbar color="blue-grey lighten-4" dark flat>
+            <v-btn icon>
+              <v-icon :color="selectedEvent.favorited ? 'red' : 'white'" large
+                >mdi-heart</v-icon
+              >
+            </v-btn>
+
+            <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+            <v-spacer></v-spacer>
+            <mcv-edit-task :eventInfo="selectedEvent" />
+            <mcv-delete-task
+              :eventInfo="selectedEvent"
+              @closeCard="isEdit = false"
+            />
+          </v-toolbar>
+          <v-card-text>
+            <span v-html="selectedEvent.details"></span>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn text color="secondary" @click="isEdit = false">
+              Cancel
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
     </v-sheet>
   </v-col>
 </template>
@@ -67,10 +103,12 @@
  
 <script>
 import { mapState } from "vuex";
+import McvDeleteTask from "./McvDeleteTask.vue";
+import McvEditTask from "./McvEditTask.vue";
 import McvNewTask from "./McvNewTask.vue";
 
 export default {
-  components: { McvNewTask },
+  components: { McvNewTask, McvEditTask, McvDeleteTask },
   name: "McvCalendar",
 
   data: () => ({
@@ -84,6 +122,9 @@ export default {
     focus: "",
     dateTitle: "",
     testEvents: [],
+    isEdit: false,
+    selectedEvent: {},
+    selectedElement: null,
   }),
 
   mounted() {
@@ -113,6 +154,18 @@ export default {
     viewDay({ date }) {
       this.focus = date;
       this.type = "day";
+    },
+
+    showEvent({ nativeEvent, event }) {
+      this.selectedEvent = event;
+      this.selectedElement = nativeEvent.target;
+      console.log(this.selectedEvent, this.selectedElement);
+
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => (this.isEdit = true))
+      );
+
+      nativeEvent.stopPropagation();
     },
   },
 };

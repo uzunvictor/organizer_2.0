@@ -7,8 +7,7 @@
         color="green"
         dark
         outlined
-        class="mt-4 mb-1 rounded-lg"
-        @click="editTask(event.name)"
+        class="mt-4 mb-3 rounded-lg"
         ><v-icon>mdi-pencil</v-icon></v-btn
       >
     </template>
@@ -57,6 +56,7 @@
                     <v-text-field
                       v-model="formatedStartDate"
                       label="selected start time"
+                      readonly
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
@@ -95,6 +95,7 @@
                     <v-text-field
                       v-model="formatedEndDate"
                       label="selcted end time"
+                      readonly
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
@@ -176,8 +177,10 @@ export default {
     isDialog: false,
     name: "",
     details: "",
-    start: "",
-    end: "",
+    startDate: "",
+    endDate: "",
+    startHour: "",
+    endHour: "",
     color: "",
 
     inputRules: [
@@ -201,32 +204,38 @@ export default {
   mounted() {
     this.name = this.eventInfo.name;
     this.details = this.eventInfo.details;
-    this.start = this.eventInfo.start;
-    this.end = this.eventInfo.end;
     this.color = this.eventInfo.color;
     this.isFavorited = this.eventInfo.favorited;
+    this.formatTime(this.eventInfo.start, this.eventInfo.end);
   },
-  // computed: {
-  //   formatedStartDate() {
-  //     return this.startDate + " " + String(this.startHour);
-  //   },
+  computed: {
+    formatedStartDate() {
+      return this.startDate + " " + this.startHour;
+    },
 
-  //   formatedEndDate() {
-  //     return this.endDate + " " + String(this.endHour);
-  //   },
-  // },
+    formatedEndDate() {
+      return this.endDate + " " + this.endHour;
+    },
+  },
 
-  // watch: {
-  //   startDate() {
-  //     this.endDate = this.startDate;
-  //   },
-  // },
+  watch: {
+    startDate() {
+      this.endDate = this.startDate;
+    },
+  },
 
   methods: {
     focusNameInput() {
       setTimeout(() => {
         this.$refs.nameInput.focus();
       });
+    },
+
+    formatTime(start, end) {
+      this.startDate = start.slice(0, 10);
+      this.startHour = start.slice(11);
+      this.endDate = end.slice(0, 10);
+      this.endHour = end.slice(11);
     },
 
     saveTask() {

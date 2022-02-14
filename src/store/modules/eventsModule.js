@@ -25,10 +25,16 @@ const actions = {
     },
 
     deleteEventAction({ state, commit }, deletedItem) {
-        const newEvents = state.events.filter((event) => event.name !== deletedItem)
+        const newEvents = state.events.filter((event) => event.id !== deletedItem)
         commit("updateEventsMutation", newEvents)
         commit("updateSortedEventsMutation", newEvents)
         removeItem(deletedItem)
+        setItem("events", newEvents)
+    },
+
+    refreshEvents({ commit }) {
+        const newEvents = getItem("events") || [];
+        commit("updateSortedEventsMutation", newEvents)
     },
 
     showFavorited({ state, commit }) {
@@ -37,13 +43,9 @@ const actions = {
     },
 
     showLastEvents({ state, commit }) {
-        const startDate = new Date("1971-01-01").getTime();
-        const endDate = new Date("2050-01-01").getTime();
         const newSortedEvents = state.sortedEvents.sort((first, second) => new Date(first.start).getTime() - new Date(second.start).getTime())
-        console.log('1', newSortedEvents)
-        console.log(startDate, endDate)
         commit("updateSortedEventsMutation", newSortedEvents)
-        //filter(e => startDate < new Date(e.start).getTime() && new Date(e.start).getTime() < endDate);
+
 
     }
 };

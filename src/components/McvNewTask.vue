@@ -46,7 +46,7 @@
                 <v-col cols="12">
                   <v-text-field
                     label="details"
-                    hint="example of helper text only on focus"
+                    hint="write details words about your task"
                     v-model="details"
                     :rules="inputRules"
                     required
@@ -59,6 +59,7 @@
                       <v-text-field
                         v-model="formatedStartDate"
                         label="selcted start time"
+                        readonly
                       ></v-text-field>
                     </v-col>
                     <v-col cols="4">
@@ -67,6 +68,7 @@
                           <v-text-field
                             label="select start date"
                             v-model="startDate"
+                            readonly
                             v-on="on"
                           ></v-text-field>
                         </template>
@@ -82,6 +84,7 @@
                           <v-text-field
                             label="select start hour"
                             v-model="startHour"
+                            readonly
                             v-on="on"
                           ></v-text-field>
                         </template>
@@ -100,6 +103,7 @@
                       <v-text-field
                         v-model="formatedEndDate"
                         label="selcted end time"
+                        readonly
                       ></v-text-field>
                     </v-col>
                     <v-col cols="4">
@@ -109,6 +113,7 @@
                             label="select end date"
                             v-model="endDate"
                             v-on="on"
+                            readonly
                           ></v-text-field>
                         </template>
                         <v-date-picker v-model="endDate"></v-date-picker
@@ -121,6 +126,7 @@
                             label="select end hour"
                             v-model="endHour"
                             v-on="on"
+                            readonly
                           ></v-text-field>
                         </template>
                         <v-time-picker
@@ -133,26 +139,29 @@
                 </v-col>
 
                 <v-col cols="8">
+                  <v-text-field
+                    label="color"
+                    v-model="color"
+                    :rules="inputRules"
+                    required
+                    readonly
+                  ></v-text-field> </v-col
+                ><v-col cols="4">
                   <v-menu>
                     <template v-slot:activator="{ on }">
-                      <v-text-field
-                        label="color"
-                        v-model="color"
-                        :rules="inputRules"
-                        v-on="on"
-                        required
-                      ></v-text-field>
+                      <v-btn :color="color" v-on="on" rounded elevation="0"
+                        >Selected color</v-btn
+                      >
                     </template>
                     <v-color-picker
                       class="ma-2"
                       v-model="color"
+                      mode="hexa"
                       :swatches="swatches"
                       show-swatches
                     ></v-color-picker>
-                  </v-menu> </v-col
-                ><v-col cols="4"
-                  ><v-btn :color="color" rounded elevation="0">Selected color</v-btn></v-col
-                >
+                  </v-menu>
+                </v-col>
               </v-row>
             </v-form>
           </v-container>
@@ -171,6 +180,7 @@
 
 <script>
 // import { setItem } from "../helpers/storage";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "McvNewTask",
@@ -187,7 +197,7 @@ export default {
     endDate: new Date().toISOString().substring(0, 10),
     endHour: "00:30",
 
-    color: "#FF0000FF",
+    color: "#FF0000",
     picker: "",
     inputRules: [
       (v) => v.length >= 3 || "Minimum number of characters required is 3",
@@ -203,17 +213,52 @@ export default {
 
   computed: {
     formatedStartDate() {
-      return this.startDate + " " + String(this.startHour);
+      return this.startDate + " " + this.startHour;
     },
 
     formatedEndDate() {
-      return this.endDate + " " + String(this.endHour);
+      return this.endDate + " " + this.endHour;
     },
   },
 
   watch: {
     startDate() {
       this.endDate = this.startDate;
+    },
+
+    startHour() {
+      const self = this;
+      const [hour, minutes] = this.startHour.split(":");
+      let [year, month, day] = this.endDate.split("-");
+      // const evenMonths = ["01", "03", "05", "07", "08", "10", "12"];
+      // const oddMonths = ["04", "06", "09", "11"];
+      // const leapYears = year % 4 === 0;
+
+      hour === "23" &&
+        minutes >= "50" &&
+        ((this.endHour = "00:00"), newEndDate());
+      getNewMonth();
+
+      hour <= "23" &&
+        minutes < "50" &&
+        (this.endHour = `${hour}:${String(+minutes + 10)}`);
+
+      function newEndDate() {
+        if (day === "31" && month !== "12") {
+          self.endDate = [year, getNewMonth(), "01"].join("-");
+        }
+        if (day === "31" && month === "12") {
+          self.endDate = String(+year + 1) + "-" + "01" + "-" + "01";
+          console.log("bingo", year);
+        }
+      }
+
+      function getNewMonth() {
+        if (month < "09") {
+          return "0".concat(String(+month + 1));
+        }
+        return String(+month + 1);
+      }
     },
   },
 
@@ -222,6 +267,11 @@ export default {
       setTimeout(() => {
         this.$refs.nameInput.focus();
       });
+    },
+
+    createId() {
+      let id = uuidv4();
+      return id;
     },
 
     saveTask() {
@@ -233,6 +283,8 @@ export default {
           end: this.formatedEndDate,
           color: this.color,
           favorited: this.isFavorited,
+          active: false,
+          id: this.createId(),
         };
 
         this.$store.dispatch("setEventsAction", credentials);

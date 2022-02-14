@@ -48,7 +48,7 @@ export default {
         },
         {
           icon: "mdi-sort-calendar-ascending",
-          tooltip: "show latest tasks",
+          tooltip: "show nearest by date tasks",
           action: this.showLastEvents,
         },
       ],
@@ -59,10 +59,9 @@ export default {
 
   methods: {
     openMenu() {
-      alert("myconsole");
+      alert("menu");
     },
     showFavorited() {
-      // alert("favorited");
       this.$store.dispatch("showFavorited");
     },
     showLastEvents() {
