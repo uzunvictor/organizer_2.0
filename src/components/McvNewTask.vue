@@ -230,9 +230,6 @@ export default {
       const self = this;
       const [hour, minutes] = this.startHour.split(":");
       let [year, month, day] = this.endDate.split("-");
-      // const evenMonths = ["01", "03", "05", "07", "08", "10", "12"];
-      // const oddMonths = ["04", "06", "09", "11"];
-      // const leapYears = year % 4 === 0;
 
       hour === "23" &&
         minutes >= "50" &&
@@ -241,23 +238,34 @@ export default {
 
       hour <= "23" &&
         minutes < "50" &&
-        (this.endHour = `${hour}:${String(+minutes + 10)}`);
+        (this.endHour = `${hour}:${+minutes + 10}`);
+
+      hour < "23" &&
+        minutes >= "50" &&
+        (this.endHour = `${+hour + 1}:${+minutes + 10}.replace(
+          "6",
+          "0"
+        )}`);
+
+      console.log(typeof this.endHour, this.endHour);
 
       function newEndDate() {
         if (day === "31" && month !== "12") {
           self.endDate = [year, getNewMonth(), "01"].join("-");
         }
         if (day === "31" && month === "12") {
-          self.endDate = String(+year + 1) + "-" + "01" + "-" + "01";
-          console.log("bingo", year);
+          self.endDate = `${+year + 1}-01-01`;
+        }
+        if (day === "28" && month === "02") {
+          self.endDate = `${year}-03-01`;
         }
       }
 
       function getNewMonth() {
         if (month < "09") {
-          return "0".concat(String(+month + 1));
+          return "0".concat(`${+month + 1}`);
         }
-        return String(+month + 1);
+        return `${+month + 1}`;
       }
     },
   },

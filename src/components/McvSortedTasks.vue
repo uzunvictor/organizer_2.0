@@ -25,7 +25,7 @@
 
         <v-sheet color="grey darken-2">
           <v-card
-            v-for="item in sortedEvents.slice(0, 8)"
+            v-for="item in sortedEvents.slice(0, 10)"
             class="my-2 rounded-lg"
             :key="item.title"
             :style="`border-left: 15px solid ${item.color}`"
